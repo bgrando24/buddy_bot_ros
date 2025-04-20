@@ -9,6 +9,20 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBGPIOD REQUIRED IMPORTED_TARGET libgpiod)
+
+# create executable from file
+add_executable(motor_controller src/motor_controller.cpp)
+# link libs (?)
+target_link_libraries(motor_controller PkgConfig::LIBGPIOD)
+# link ROS2 libs
+ament_target_dependencies(motor_controller rclcpp)
+# install the executable into the right place when build
+install(TARGETS
+  motor_controller
+  DESTINATION lib/${PROJECT_NAME})
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
